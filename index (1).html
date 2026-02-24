@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Sci-Calc</title>
+    <style>
+        :root {
+            --bg: #0f0f0f;
+            --panel: #1e1e1e;
+            --accent: #00ff88;
+            --text: #ffffff;
+        }
+
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            display: flex; justify-content: center; align-items: center; 
+            height: 100vh; background: var(--bg); margin: 0; 
+        }
+
+        .calc-container { 
+            background: var(--panel); padding: 25px; border-radius: 25px; 
+            box-shadow: 0 0 50px rgba(0,0,0,0.8); width: 340px; 
+            border: 1px solid #333;
+        }
+
+        #display { 
+            width: 100%; height: 70px; font-size: 28px; text-align: right; 
+            margin-bottom: 20px; padding: 15px; box-sizing: border-box; 
+            background: #000; color: var(--accent); border: 1px solid #222; 
+            border-radius: 12px; text-shadow: 0 0 10px var(--accent);
+            transition: all 0.2s ease;
+        }
+
+        /* The "Flash" effect for the display */
+        .display-glow { box-shadow: 0 0 20px var(--accent); }
+
+        .buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+        button { 
+            padding: 18px; font-size: 16px; border: none; border-radius: 10px; 
+            cursor: pointer; background: #2a2a2a; color: white; 
+            transition: all 0.1s; position: relative; overflow: hidden;
+            outline: none;
+        }
+
+        /* Light Effect on Click */
+        button:active {
+            transform: scale(0.92);
+            background: #444;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+        }
+
+        /* Specific Glow Colors */
+        .operator:active { box-shadow: 0 0 20px #f39c12; }
+        .scientific:active { box-shadow: 0 0 20px #3498db; }
+        .equals:active { box-shadow: 0 0 20px #27ae60; }
+
+        .operator { background: #d35400; color: white; }
+        .scientific { background: #2980b9; color: white; font-size: 13px; }
+        .equals { grid-column: span 2; background: #27ae60; }
+        .clear { background: #c0392b; }
+    </style>
+</head>
+<body>
+
+<div class="calc-container">
+    <input type="text" id="display" disabled value="">
+    <div class="buttons">
+        <button class="scientific" onclick="sci('sin')">sin</button>
+        <button class="scientific" onclick="sci('cos')">cos</button>
+        <button class="scientific" onclick="sci('tan')">tan</button>
+        <button class="clear" onclick="clearDisplay()">AC</button>
+        
+        <button class="scientific" onclick="appendValue('**')">xʸ</button>
+        <button class="scientific" onclick="sci('sqrt')">√</button>
+        <button class="scientific" onclick="sci('log')">log</button>
+        <button class="operator" onclick="appendValue('/')">÷</button>
+
+        <button onclick="appendValue('7')">7</button>
+        <button onclick="appendValue('8')">8</button>
+        <button onclick="appendValue('9')">9</button>
+        <button class="operator" onclick="appendValue('*')">×</button>
+
+        <button onclick="appendValue('4')">4</button>
+        <button onclick="appendValue('5')">5</button>
+        <button onclick="appendValue('6')">6</button>
+        <button class="operator" onclick="appendValue('-')">-</button>
+
+        <button onclick="appendValue('1')">1</button>
+        <button onclick="appendValue('2')">2</button>
+        <button onclick="appendValue('3')">3</button>
+        <button class="operator" onclick="appendValue('+')">+</button>
+
+        <button onclick="appendValue('0')">0</button>
+        <button onclick="appendValue('.')">.</button>
+        <button class="equals" onclick="calculate()">=</button>
+    </div>
+</div>
+
+<script>
+    const display = document.getElementById('display');
+
+    function flashDisplay() {
+        display.classList.add('display-glow');
+        setTimeout(() => display.classList.remove('display-glow'), 300);
+    }
+
+    function appendValue(val) { 
+        display.value += val; 
+    }
+
+    function clearDisplay() { 
+        display.value = ''; 
+    }
+    
+    function calculate() {
+        try { 
+            display.value = eval(display.value); 
+            flashDisplay(); // Light effect on screen when result appears
+        } catch { 
+            display.value = 'Error'; 
+        }
+    }
+
+    function sci(type) {
+        let val = parseFloat(display.value);
+        if (isNaN(val)) return;
+        
+        if (type === 'sin') display.value = Math.sin(val * Math.PI / 180).toFixed(4);
+        if (type === 'cos') display.value = Math.cos(val * Math.PI / 180).toFixed(4);
+        if (type === 'tan') display.value = Math.tan(val * Math.PI / 180).toFixed(4);
+        if (type === 'sqrt') display.value = Math.sqrt(val).toFixed(4);
+        if (type === 'log') display.value = Math.log10(val).toFixed(4);
+        
+        flashDisplay();
+    }
+</script>
+
+</body>
+</html>
